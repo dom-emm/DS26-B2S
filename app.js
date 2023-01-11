@@ -7,6 +7,8 @@ console.log("Hello back to school!");
 const containerDiv = document.getElementById("vizContainer");
 const exportpdfbutton = document.getElementById("exportPDF");
 const exportpptbutton = document.getElementById("exportPPT");
+const exportimgbutton = document.getElementById("exportIMG");
+switchStatus = false;
 let viz;
 
 const options = {
@@ -18,23 +20,27 @@ const options = {
 const url =
   "https://public.tableau.com/views/Embeddingexample_16734335337830/Embeddingexample?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link";
 
-function initViz() {
-  viz = new tableau.Viz(containerDiv, url, options);
+function initViz(vizurl) {
+  viz = new tableau.Viz(containerDiv, vizurl, options);
 }
 
-document.addEventListener("DOMContentLoaded", initViz);
+document.addEventListener("DOMContentLoaded", initViz(url));
 
 function exportPDFfunction() {
   viz.showExportPDFDialog();
 }
 
-exportpdfbutton.addEventListener("click", exportPDFfunction);
-
 function exportPPTfunction() {
   viz.showExportPowerPointDialog();
 }
 
+function exportIMGfunction() {
+  viz.showExportImageDialog();
+}
+
+exportpdfbutton.addEventListener("click", exportPDFfunction);
 exportpptbutton.addEventListener("click", exportPPTfunction);
+exportimgbutton.addEventListener("click", exportIMGfunction);
 
 function getRangeValues() {
   const minValue = document.getElementById("minValue").value;
@@ -69,3 +75,18 @@ function getRangeValues() {
 document
   .getElementById("FilterButton")
   .addEventListener("click", getRangeValues);
+
+function switchViz() {
+  viz.dispose();
+  const newUrl =
+    "https://public.tableau.com/views/Superstoredashboard-WOW_2022_W19/WOW2022-W19?:language=en-GB&:display_count=n&:origin=viz_share_link";
+  if (switchStatus == false) {
+    initViz(newUrl);
+    switchStatus = true;
+  } else if (switchStatus == true) {
+    initViz(url);
+    switchStatus = false;
+  }
+}
+
+document.getElementById("SwitchViz").addEventListener("click", switchViz);
